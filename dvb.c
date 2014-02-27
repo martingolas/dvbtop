@@ -1,6 +1,7 @@
 #include "dvb.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 
@@ -45,7 +46,9 @@ void getCardInfo(int cardIdx, cardInfo* ci)
 		{
 			perror("Cannot get frontend info: ");
 		} else {
-			ci->name = finfo.name; // Get demodulator name
+			//printf("%s\n",finfo.name);
+			//ci->name = finfo.name; // Get demodulator name
+			strcpy(ci->name, finfo.name);
 			// Get readable frontend type
 			switch(finfo.type) {
 				case FE_QPSK:

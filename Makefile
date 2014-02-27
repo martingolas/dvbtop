@@ -1,9 +1,9 @@
 # Makefile for DVB-T frontend parser
 CC=gcc
-CFLAGS=-g -gdwarf-2 -c -Wall -lncurses
-LDFLAGS=
+CFLAGS=-g -gdwarf-2 -c -Wall
+LDFLAGS=-lncurses
 
-SOURCES=main.c
+SOURCES=main.c dvb.c ui.c
 OBJECTS=$(SOURCES:.cpp=.o)
 EXEC=dvbtop
 

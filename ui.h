@@ -1,4 +1,7 @@
 #pragma once
 #include "cardinfo.h"
+#include <ncurses.h>
 
-void showCard(int cardIdx, cardInfo *cInfo);
+void showCard(WINDOW *win, int cardIdx, cardInfo *cInfo);
+
+void showTitle();
