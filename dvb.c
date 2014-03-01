@@ -42,6 +42,7 @@ void getCardInfo(int cardIdx, cardInfo* ci)
 		perror("ERROR - Cannot get card info: ");
 		exit(-1);
 	} else {
+		/* Frontend Info */
 		if(ioctl(cd, FE_GET_INFO, &finfo) == -1)
 		{
 			perror("Cannot get frontend info: ");
@@ -61,8 +62,11 @@ void getCardInfo(int cardIdx, cardInfo* ci)
 					ci->type = "DVB-T";
 					break;
 			}
+			ci->capabilites = finfo.caps;
 		}
 		
+
+		/* Frontend params */
 		if(ioctl(cd, FE_GET_FRONTEND, &fparams) == -1)
 		{
 			perror("Cannot get frontend parameters: ");
@@ -71,16 +75,19 @@ void getCardInfo(int cardIdx, cardInfo* ci)
 			// TODO QAM/QPSK/OFDM details	
 		}
 
+		/* Frontend SNR */
 		if(ioctl(cd, FE_READ_SNR, &ci->snr) == -1)
 		{
 			perror("Cannot get SNR: ");
 		}
 		
+		/* Frontend SIGNAL */
 		if(ioctl(cd, FE_READ_SIGNAL_STRENGTH, &ci->signal) == -1)
 		{
 			perror("Cannot get signal strength: ");
 		}
 		
+		/* Frontend BER */
 		if(ioctl(cd, FE_READ_BER, &ci->ber) == -1)
 		{
 			perror("Cannot get bit error rate: ");

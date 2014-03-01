@@ -7,7 +7,7 @@
 void showCard(WINDOW *win, int cardIdx, cardInfo *cInfo)
 {
 	//mvwprintw(win, 1, 1, "Frontend: %s", cInfo->name);
-	mvwprintw(win, 1, 1, "Frontend: %s Type: %s\n  SNR: %d Signal: %d\n  BER: %d Freq: %d Hz\n", cInfo->name, cInfo->type, cInfo->snr, cInfo->signal, cInfo->ber, cInfo->freq);
+	mvwprintw(win, 1, 1, "Frontend: %s Type: %s\n  SNR: %d Signal: %d\n  BER: %d Freq: %d Hz Caps: %x\n", cInfo->name, cInfo->type, cInfo->snr, cInfo->signal, cInfo->ber, cInfo->freq, cInfo->capabilites);
 	
 	box(win,0,0);
 	attron(A_BOLD);

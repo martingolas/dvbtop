@@ -82,7 +82,8 @@ int main(int argc, char* argv[])
 				.signal = -1,
 				.snr = -1,
 				.ber = -1,
-				.freq = -1
+				.freq = -1,
+				.caps = 0xc01b2eaf
 			};
 			getCardInfo(i, &cInfo);
 			//printw("Card: %d Name: %s Type: %s SNR: %d Signal: %d BER: %d Freq: %d Hz\n",i,cInfo.name, cInfo.type,cInfo.snr,cInfo.signal, cInfo.ber, cInfo.freq);
