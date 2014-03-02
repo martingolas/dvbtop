@@ -7,7 +7,12 @@
 
 #define VER 0.1f // Program version
 #define DEF_REFRESH 1 // Default refresh rate in secs
-#define CAPS_COUNT 22 // Define default count of capabilites to display
+#define CAPS_COUNT 27 // Define default 
+#define STAT_COUNT 7 // Count of stats to display
 
 #define TITLE_OFFSET 0
-#define CAPS_OFFSET 5
+#define CAPS_ROFFSET 5
+#define CAPS_COFFSET 1
+
+#define STAT_COFFSET 50
+#define STAT_ROFFSET 5

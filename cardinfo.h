@@ -16,8 +16,8 @@ typedef struct cardInfo {
 	int16_t snr;
 	uint32_t ber;
 	uint32_t freq;
-	int caps;
 	capInfo_t capsInfo[CAPS_COUNT];
+	capInfo_t statInfo[STAT_COUNT];
 } cardInfo;
 
 

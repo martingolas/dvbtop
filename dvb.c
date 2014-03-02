@@ -92,13 +92,22 @@ void getCardInfo(int cardIdx, cardInfo* ci)
 		{
 			perror("Cannot get signal strength: ");
 		}
-		
+			
 		/* Frontend BER */
 		if(ioctl(cd, FE_READ_BER, &ci->ber) == -1)
 		{
 			perror("Cannot get bit error rate: ");
 		}
-
+		
+		/* Frontend STATUS */
+		fe_status_t fest;
+		if(ioctl(cd, FE_READ_STATUS, &fest) == -1)
+		{
+			perror("Cannot get frontend status: ");
+		} else {
+			parseStatus(fest, ci->statInfo);	
+		}
+		
 		close(cd);
 	}
 }
@@ -108,7 +117,35 @@ int getApiVer()
 	return DVB_API_VERSION;
 }
 
-void parseCaps(int caps, capInfo_t cpi[])
+
+void parseStatus(fe_status_t fest, capInfo_t st[])
+{
+	
+	/*  FE_HAS_SIGNAL */
+	strcpy(st[0].title,"SIG");	
+	st[0].has = ((fest & FE_HAS_SIGNAL) != 0) ? 1 : 0;
+	/*  FE_HAS_CARRIER */
+	strcpy(st[1].title,"CARRIER");	
+	st[1].has = ((fest & FE_HAS_CARRIER) != 0) ? 1 : 0;
+	/*  FE_HAS_VITERBI */
+	strcpy(st[2].title,"STABLE");	
+	st[2].has = ((fest & FE_HAS_VITERBI) != 0) ? 1 : 0;
+	/*  FE_HAS_SYNC */
+	strcpy(st[3].title,"SYNC");	
+	st[3].has = ((fest & FE_HAS_SYNC) != 0) ? 1 : 0;
+	/*  FE_HAS_LOCK */
+	strcpy(st[4].title,"LOCK");	
+	st[4].has = ((fest & FE_HAS_LOCK) != 0) ? 1 : 0;
+	/*  FE_TIMEDOUT */
+	strcpy(st[5].title,"TIMEOUT");	
+	st[5].has = ((fest & FE_TIMEDOUT) != 0) ? 1 : 0;
+	/*  FE_REINIT */
+	strcpy(st[6].title,"REINIT");	
+	st[6].has = ((fest & FE_REINIT) != 0) ? 1 : 0;
+
+}
+
+void parseCaps(fe_caps_t caps, capInfo_t cpi[])
 {
 	/* FE_IS_STUPID */
 	strcpy(cpi[0].title,"N/A");	
@@ -198,6 +235,28 @@ void parseCaps(int caps, capInfo_t cpi[])
 	/*  FE_CAN_MUTE_TS */
 	strcpy(cpi[21].title,"MUTE TS");	
 	cpi[21].has = ((caps & FE_CAN_MUTE_TS) != 0) ? 1 : 0;
+
+	/*  FE_CAN_8VSB */
+	strcpy(cpi[22].title,"8VSB");	
+	cpi[22].has = ((caps & FE_CAN_8VSB) != 0) ? 1 : 0;
+
+	/*  FE_CAN_16VSB */
+	strcpy(cpi[23].title,"16VSB");	
+	cpi[23].has = ((caps & FE_CAN_16VSB) != 0) ? 1 : 0;
+		
+	/*  FE_CAN_RECOVER */
+	strcpy(cpi[24].title,"RECOVER");	
+	cpi[24].has = ((caps & FE_CAN_RECOVER) != 0) ? 1 : 0;
+		
+	/*  FE_CAN_TURBO_FEC */
+	strcpy(cpi[25].title,"TURBOFEC");	
+	cpi[25].has = ((caps & FE_CAN_TURBO_FEC) != 0) ? 1 : 0;
+	
+	/*  FE_CAN_2G_MODULATION */
+	strcpy(cpi[26].title,"DVB-S2");	
+	cpi[26].has = ((caps & FE_CAN_2G_MODULATION) != 0) ? 1 : 0;
+
+			
 }
 
 

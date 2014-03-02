@@ -96,11 +96,10 @@ int main(int argc, char* argv[])
 				.signal = -1,
 				.snr = -1,
 				.ber = -1,
-				.freq = -1,
-				.caps = 0xc01b2eaf
+				.freq = -1
 			};
-			//getCardInfo(i, &cInfo);
-			parseCaps(cInfo.caps, cInfo.capsInfo);
+			getCardInfo(i, &cInfo);
+			//parseCaps(cInfo.caps, cInfo.capsInfo);
 			//printw("Card: %d Name: %s Type: %s SNR: %d Signal: %d BER: %d Freq: %d Hz\n",i,cInfo.name, cInfo.type,cInfo.snr,cInfo.signal, cInfo.ber, cInfo.freq);
 			showCard(cwins[i], i, &cInfo);
 		}	
