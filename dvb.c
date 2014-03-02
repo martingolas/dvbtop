@@ -1,8 +1,10 @@
 #include "dvb.h"
+#include "options.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include <sys/ioctl.h>
 
 int countCards()
@@ -50,6 +52,7 @@ void getCardInfo(int cardIdx, cardInfo* ci)
 			//printf("%s\n",finfo.name);
 			//ci->name = finfo.name; // Get demodulator name
 			strcpy(ci->name, finfo.name);
+			parseCaps(finfo.caps, ci->capsInfo);
 			// Get readable frontend type
 			switch(finfo.type) {
 				case FE_QPSK:
@@ -61,8 +64,11 @@ void getCardInfo(int cardIdx, cardInfo* ci)
 				case FE_OFDM:
 					ci->type = "DVB-T";
 					break;
+				case FE_ATSC:
+					ci->type = "ATSC";
+					break;
 			}
-			ci->capabilites = finfo.caps;
+			
 		}
 		
 
@@ -102,3 +108,123 @@ int getApiVer()
 	return DVB_API_VERSION;
 }
 
+void parseCaps(int caps, capInfo_t cpi[])
+{
+	/* FE_IS_STUPID */
+	strcpy(cpi[0].title,"N/A");	
+	//cpi[0].title = "N/A";	
+	cpi[0].has = (caps == 0) ? 1 : 0;
+
+	/*  FE_CAN_INVERSION_AUTO */
+	strcpy(cpi[1].title,"AUTO INV");	
+	cpi[1].has = ((caps & FE_CAN_INVERSION_AUTO) != 0) ? 1 : 0;
+
+	/*  FE_CAN_FEC_1_2 */
+	strcpy(cpi[2].title,"FEC 1/2");	
+	cpi[2].has = ((caps & FE_CAN_FEC_1_2) != 0) ? 1 : 0;
+	
+	/*  FE_CAN_FEC_2_3 */
+	strcpy(cpi[3].title,"FEC 2/3");
+	cpi[3].has = ((caps & FE_CAN_FEC_2_3) != 0) ? 1 : 0;
+	
+	/*  FE_CAN_FEC_3_4 */
+	strcpy(cpi[4].title,"FEC 3/4");	
+	cpi[4].has = ((caps & FE_CAN_FEC_3_4) != 0) ? 1 : 0;
+	
+	/*  FE_CAN_FEC_4_5 */
+	strcpy(cpi[5].title,"FEC 4/5");	
+	cpi[5].has = ((caps & FE_CAN_FEC_4_5) != 0) ? 1 : 0;
+	
+	/*  FE_CAN_FEC_5_6 */
+	strcpy(cpi[6].title,"FEC 5/6");
+	cpi[6].has = ((caps & FE_CAN_FEC_5_6) != 0) ? 1 : 0;
+
+	/*  FE_CAN_FEC_7_8 */
+	strcpy(cpi[7].title,"FEC 7/8");	
+	cpi[7].has = ((caps & FE_CAN_FEC_7_8) != 0) ? 1 : 0;
+	
+	/*  FE_CAN_FEC_8_9 */
+	strcpy(cpi[8].title,"FEC 8/9");	
+	cpi[8].has = ((caps & FE_CAN_FEC_8_9) != 0) ? 1 : 0;
+	
+	/*  FE_CAN_FEC_AUTO */
+	strcpy(cpi[9].title,"FEC AUTO");
+	cpi[9].has = ((caps & FE_CAN_FEC_AUTO) != 0) ? 1 : 0;
+	
+	/*  FE_CAN_QPSK */
+	strcpy(cpi[10].title,"QPSK");
+	cpi[10].has = ((caps & FE_CAN_QPSK) != 0) ? 1 : 0;
+	
+	/*  FE_CAN_QAM_16 */
+	strcpy(cpi[11].title,"QAM16");	
+	cpi[11].has = ((caps & FE_CAN_QAM_16) != 0) ? 1 : 0;
+
+	/*  FE_CAN_QAM_32 */
+	strcpy(cpi[12].title,"QAM32");	
+	cpi[12].has = ((caps & FE_CAN_QAM_32) != 0) ? 1 : 0;
+
+	/*  FE_CAN_QAM_64 */
+	strcpy(cpi[13].title,"QAM64");	
+	cpi[13].has = ((caps & FE_CAN_QAM_64) != 0) ? 1 : 0;
+
+	/*  FE_CAN_QAM_128 */
+	strcpy(cpi[14].title,"QAM128");	
+	cpi[14].has = ((caps & FE_CAN_QAM_128) != 0) ? 1 : 0;
+
+	/*  FE_CAN_QAM_256 */
+	strcpy(cpi[15].title,"QAM256");	
+	cpi[15].has = ((caps & FE_CAN_QAM_256) != 0) ? 1 : 0;
+
+	/*  FE_CAN_QAM_AUTO */
+	strcpy(cpi[16].title,"QAM AUTO");	
+	cpi[16].has = ((caps & FE_CAN_QAM_AUTO) != 0) ? 1 : 0;
+
+	/*  FE_CAN_TRANSMISSION_MODE_AUTO */
+	strcpy(cpi[17].title,"TX AUTO");	
+	cpi[17].has = ((caps & FE_CAN_TRANSMISSION_MODE_AUTO) != 0) ? 1 : 0;
+
+	/*  FE_CAN_BANDWIDTH_AUTO */
+	strcpy(cpi[18].title,"BW AUTO");	
+	cpi[18].has = ((caps & FE_CAN_BANDWIDTH_AUTO) != 0) ? 1 : 0;
+
+	/*  FE_CAN_GUARD_INTERVAL_AUTO */
+	strcpy(cpi[19].title,"GI AUTO");	
+	cpi[19].has = ((caps & FE_CAN_GUARD_INTERVAL_AUTO) != 0) ? 1 : 0;
+
+	/*  FE_CAN_HIERARCHY_AUTO */
+	strcpy(cpi[20].title,"HI AUTO");	
+	cpi[20].has = ((caps & FE_CAN_HIERARCHY_AUTO) != 0) ? 1 : 0;
+
+	/*  FE_CAN_MUTE_TS */
+	strcpy(cpi[21].title,"MUTE TS");	
+	cpi[21].has = ((caps & FE_CAN_MUTE_TS) != 0) ? 1 : 0;
+}
+
+
+
+/*typedef enum fe_caps {
+        FE_IS_STUPID                  = 0,
+        FE_CAN_INVERSION_AUTO         = 0x1,
+        FE_CAN_FEC_1_2                = 0x2,
+        FE_CAN_FEC_2_3                = 0x4,
+        FE_CAN_FEC_3_4                = 0x8,
+        FE_CAN_FEC_4_5                = 0x10,
+        FE_CAN_FEC_5_6                = 0x20,
+        FE_CAN_FEC_6_7                = 0x40,
+        FE_CAN_FEC_7_8                = 0x80,
+        FE_CAN_FEC_8_9                = 0x100,
+        FE_CAN_FEC_AUTO               = 0x200,
+        FE_CAN_QPSK                   = 0x400,
+        FE_CAN_QAM_16                 = 0x800,
+        FE_CAN_QAM_32                 = 0x1000,
+        FE_CAN_QAM_64                 = 0x2000,
+        FE_CAN_QAM_128                = 0x4000,
+        FE_CAN_QAM_256                = 0x8000,
+        FE_CAN_QAM_AUTO               = 0x10000,
+        FE_CAN_TRANSMISSION_MODE_AUTO = 0x20000,
+        FE_CAN_BANDWIDTH_AUTO         = 0x40000,
+        FE_CAN_GUARD_INTERVAL_AUTO    = 0x80000,
+        FE_CAN_HIERARCHY_AUTO         = 0x100000,
+        FE_CAN_MUTE_TS                = 0x80000000,
+        FE_CAN_CLEAN_SETUP            = 0x40000000
+} fe_caps_t;*/

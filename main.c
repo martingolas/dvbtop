@@ -7,6 +7,7 @@
 #include "dvb.h"
 #include "cardinfo.h"
 #include "options.h"
+#include "ui.h"
 
 
 
@@ -50,14 +51,27 @@ int main(int argc, char* argv[])
 	}
 
 	/* Display UI, begin refresh loop */
-	int cnt = countCards();
+	//int cnt = countCards();
+	int cnt = 1;
 
 	/* ncurses init */
 	WINDOW *rootWin = initscr();
+
+	if(has_colors() == FALSE)
+	{	
+		endwin();
+		printf("Your terminal does not support color\n");
+		exit(1);
+	}
+
 	cbreak(); // Do not flush buffer on newline, except ^Z or ^C
 	noecho(); // SSsshhh....
 	curs_set(0); // No cursor please
 	nodelay(rootWin,TRUE);
+	start_color();
+	
+	init_pair(1, COLOR_RED, COLOR_BLACK);
+	init_pair(2, COLOR_GREEN, COLOR_BLACK);
 
 
 	/* Create new window for each card */
@@ -65,7 +79,7 @@ int main(int argc, char* argv[])
 	WINDOW *cwins[cnt];
 	for (i = 0; i < cnt; ++i)
 	{
-		cwins[i] = newwin(10,COLS,(20*i)+2,0);
+		cwins[i] = newwin(15,COLS,(20*i)+2,0);
 	}
 
 	while(1)
@@ -85,7 +99,8 @@ int main(int argc, char* argv[])
 				.freq = -1,
 				.caps = 0xc01b2eaf
 			};
-			getCardInfo(i, &cInfo);
+			//getCardInfo(i, &cInfo);
+			parseCaps(cInfo.caps, cInfo.capsInfo);
 			//printw("Card: %d Name: %s Type: %s SNR: %d Signal: %d BER: %d Freq: %d Hz\n",i,cInfo.name, cInfo.type,cInfo.snr,cInfo.signal, cInfo.ber, cInfo.freq);
 			showCard(cwins[i], i, &cInfo);
 		}	

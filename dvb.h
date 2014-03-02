@@ -12,3 +12,5 @@ int countCards(); // Estimate number of available cards
 void getCardInfo(int cardIdx, cardInfo* ci); // Get & Fill card info
 
 int getApiVer();
+
+void parseCaps(int caps, capInfo_t cpi[]);

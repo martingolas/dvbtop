@@ -1,6 +1,6 @@
 # Makefile for DVB-T frontend parser
 CC=gcc
-CFLAGS=-g -gdwarf-2 -c -Wall
+CFLAGS=-g -gdwarf-2 -Wall
 LDFLAGS=-lncurses
 
 SOURCES=main.c dvb.c ui.c
@@ -10,7 +10,7 @@ EXEC=dvbtop
 all: $(SOURCES) $(EXEC)
 
 $(EXEC): $(OBJECTS) 
-	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
+	$(CC) $(CFLAGS) $(OBJECTS) -o $@ $(LDFLAGS)
 
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@
@@ -19,4 +19,4 @@ $(EXEC): $(OBJECTS)
 .PHONY: clean
 
 clean:
-	rm $(EXEC) *.o
+	rm $(EXEC)
