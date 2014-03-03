@@ -6,17 +6,29 @@
 
 void showCard(WINDOW *win, int cardIdx, cardInfo *cInfo)
 {
-	//mvwprintw(win, 1, 1, "Frontend: %s", cInfo->name);
-	mvwprintw(win, 1, 1, "Frontend: %s Type: %s\n  SNR: %d Signal: %d\n  BER: %d Freq: %d Hz \n", cInfo->name, cInfo->type, cInfo->snr, cInfo->signal, cInfo->ber, cInfo->freq);
-	
 	box(win,0,0);
 	attron(A_BOLD);
-	mvwprintw(win, 0, 7, "[Card: %d]", cardIdx);
+	mvwprintw(win, 0, 1, "[Card: %d]", cardIdx);
+
+	mvwprintw(win, 1, 1, "%s", cInfo->name);
+	mvwprintw(win, 1, 21, "Type: %s", cInfo->type);
 	attroff(A_BOLD);
+	
+
+	mvwprintw(win, 3, 1, "Freq: %d Hz",cInfo->freq);
+	mvwprintw(win, 3, 21, "Signal: %d",cInfo->signal);
+	
+	mvwprintw(win, 4, 1, "BER:  %d",cInfo->ber);
+	mvwprintw(win, 4, 21, "SNR:    %d",cInfo->snr);
+
 
 	printCaps(win, cInfo->capsInfo);
-
 	printStatus(win, cInfo->statInfo);	
+
+	/* Info */
+	mvwprintw(win, INFO_ROFFSET, INFO_COFFSET, "Frequency: Min %d Hz Max: %d Hz Step: %d Hz",cInfo->freq_min,cInfo->freq_max,cInfo->freq_step);
+	mvwprintw(win, INFO_ROFFSET+1, INFO_COFFSET, "Symbol rate - Min: %d ppm Max: %d ppm Tolerance: %d ppm",cInfo->symbol_rate_min,cInfo->symbol_rate_max,cInfo->symbol_rate_tolerance);
+	
 	wrefresh(win);
 
 }
@@ -71,12 +83,12 @@ void printCaps(WINDOW *win, capInfo_t *ci)
 
 void printStatus(WINDOW *win, capInfo_t *st)
 {
+	int i = 0, coffset = STAT_COFFSET, roffset = STAT_ROFFSET;
 	
 	attron(A_BOLD);
-	mvwprintw(win, STAT_ROFFSET, STAT_COFFSET, "Status:");
+	mvwprintw(win, roffset, coffset, "Status: ");
 	attroff(A_BOLD);
 
-	int i = 0;
 	for (i = 0; i < STAT_COUNT; ++i)
 	{
 		if(st[i].has == 0)
@@ -86,8 +98,7 @@ void printStatus(WINDOW *win, capInfo_t *st)
 		{
 			wattron(win,COLOR_PAIR(2));		
 		}
-		
-		mvwprintw(win, STAT_ROFFSET + i + 1, STAT_COFFSET, "%s", st[i].title);
+		wprintw(win, "%s ", st[i].title);
 		wattroff(win,COLOR_PAIR(1));		
 		wattroff(win,COLOR_PAIR(2));		
 	}

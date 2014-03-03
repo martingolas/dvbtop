@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 	WINDOW *cwins[cnt];
 	for (i = 0; i < cnt; ++i)
 	{
-		cwins[i] = newwin(15,COLS,(20*i)+2,0);
+		cwins[i] = newwin(20,COLS,(20*i)+2,0);
 	}
 
 	while(1)

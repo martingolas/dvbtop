@@ -52,7 +52,6 @@ void getCardInfo(int cardIdx, cardInfo* ci)
 			//printf("%s\n",finfo.name);
 			//ci->name = finfo.name; // Get demodulator name
 			strcpy(ci->name, finfo.name);
-			parseCaps(finfo.caps, ci->capsInfo);
 			// Get readable frontend type
 			switch(finfo.type) {
 				case FE_QPSK:
@@ -68,7 +67,14 @@ void getCardInfo(int cardIdx, cardInfo* ci)
 					ci->type = "ATSC";
 					break;
 			}
-			
+			ci->freq_min = finfo.frequency_min;
+			ci->freq_max = finfo.frequency_max;
+			ci->freq_step = finfo.frequency_stepsize;
+			ci->freq_tol = finfo.frequency_tolerance;
+			ci->symbol_rate_min = finfo.symbol_rate_min;
+			ci->symbol_rate_max = finfo.symbol_rate_max;
+			ci->symbol_rate_tolerance = finfo.symbol_rate_tolerance;
+			parseCaps(finfo.caps, ci->capsInfo);
 		}
 		
 
@@ -122,7 +128,7 @@ void parseStatus(fe_status_t fest, capInfo_t st[])
 {
 	
 	/*  FE_HAS_SIGNAL */
-	strcpy(st[0].title,"SIG");	
+	strcpy(st[0].title,"SIGNAL");	
 	st[0].has = ((fest & FE_HAS_SIGNAL) != 0) ? 1 : 0;
 	/*  FE_HAS_CARRIER */
 	strcpy(st[1].title,"CARRIER");	

@@ -11,8 +11,11 @@
 #define STAT_COUNT 7 // Count of stats to display
 
 #define TITLE_OFFSET 0
-#define CAPS_ROFFSET 5
+#define CAPS_ROFFSET 8
 #define CAPS_COFFSET 1
 
-#define STAT_COFFSET 50
-#define STAT_ROFFSET 5
+#define STAT_COFFSET 1
+#define STAT_ROFFSET 6
+
+#define INFO_COFFSET 50
+#define INFO_ROFFSET 8
