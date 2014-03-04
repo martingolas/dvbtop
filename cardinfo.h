@@ -17,7 +17,7 @@ typedef struct ofdmInfo {
 	char modulation[10]; // OFDM,QPSK...
 	char trMode[6]; // Transmission mode
 	char guardInt[10]; // Guard interval
-	char hiearchy[10]; // Hiearchy	
+	char hierarchy[10]; // Hiearchy	
 } ofdmInfo_t;
 
 

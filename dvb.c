@@ -368,14 +368,23 @@ void parseOFDM(struct dvb_ofdm_parameters *ofdm, ofdmInfo_t *ofdmInfo)
   	}
 
   	// Hiearchy
-  	/*switch(ofdm->hiearchy)
+  	switch(ofdm->hierarchy_information)
   	{
-  		HIERARCHY_NONE,
-		HIERARCHY_1,
-		HIERARCHY_2,
-		HIERARCHY_4,
-		HIERARCHY_AUTO,
-  	}*/
+  		case HIERARCHY_NONE :
+  			strcpy(ofdmInfo->hierarchy, "NONE");
+			break;
+		case HIERARCHY_1 :
+  			strcpy(ofdmInfo->hierarchy, "1");
+			break;
+		case HIERARCHY_2 :
+  			strcpy(ofdmInfo->hierarchy, "2");
+			break;
+		case HIERARCHY_4 :
+  			strcpy(ofdmInfo->hierarchy, "4");
+			break;
+		case HIERARCHY_AUTO :
+			break;
+  	}
 
 }
 
