@@ -265,6 +265,12 @@ void parseCaps(fe_caps_t caps, capInfo_t cpi[])
 			
 }
 
+void parseOFDM(struct dvb_ofdm_parameters *ofdm, ofdmInfo_t *ofdmInfo
+{
+	// Bandwidth
+	if((ofdm->bandwidth & BANDWIDTH_8_MHZ))
+
+}
 
 
 /*typedef enum fe_caps {

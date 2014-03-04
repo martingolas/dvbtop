@@ -2,6 +2,18 @@
 #include <stdint.h>
 #include "options.h"
 
+typedef struct ofdmInfo {
+	char bandw[6]; // Bandwidth
+	char crHP[6]; // Code rate high priority
+	char crLP[6]; // Code rate low priority
+	char modulation[10]; // OFDM,QPSK...
+	char trMode[6]; // Transmission mode
+	char guardInt[10]; // Guard interval
+	char hiearchy[10]; // Hiearchy	
+} ofdmInfo_t;
+
+
+
 typedef struct capInfo {
 	char has;
 	char title[20];
@@ -25,6 +37,11 @@ typedef struct cardInfo {
 
 	capInfo_t capsInfo[CAPS_COUNT]; // Capabailites
 	capInfo_t statInfo[STAT_COUNT]; // Current status
+
+	union {
+		ofdmInfo_t ofdm;
+		// TODO: QPSK, QAM, VSB
+	} u;
 } cardInfo;
 
 

@@ -21,3 +21,7 @@ int getApiVer();
 void parseStatus(fe_status_t fest, capInfo_t st[]);
 
 void parseCaps(fe_caps_t caps, capInfo_t cpi[]);
+
+void parseOFDM(struct dvb_ofdm_parameters *ofdm, ofdmInfo_t *ofdmInfo);
+
+// TODO Parse QPSK, VSB, QAM
