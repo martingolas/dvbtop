@@ -9,3 +9,5 @@ void showTitle();
 void printCaps(WINDOW *win, capInfo_t *ci);
 
 void printStatus(WINDOW *win, capInfo_t *st);
+
+void printOFDM(WINDOW *win, ofdmInfo_t *ofdm);

@@ -19,3 +19,7 @@
 
 #define INFO_COFFSET 50
 #define INFO_ROFFSET 8
+
+#define OFDM_COFFSET 50
+#define OFDM_ROFFSET 1
+

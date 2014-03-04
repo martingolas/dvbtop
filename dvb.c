@@ -49,9 +49,8 @@ void getCardInfo(int cardIdx, cardInfo* ci)
 		{
 			perror("Cannot get frontend info: ");
 		} else {
-			//printf("%s\n",finfo.name);
-			//ci->name = finfo.name; // Get demodulator name
-			strcpy(ci->name, finfo.name);
+		
+			strcpy(ci->name, finfo.name);  // Get demodulator name
 			// Get readable frontend type
 			switch(finfo.type) {
 				case FE_QPSK:
@@ -84,7 +83,20 @@ void getCardInfo(int cardIdx, cardInfo* ci)
 			perror("Cannot get frontend parameters: ");
 		} else {
 			ci->freq = fparams.frequency;
-			// TODO QAM/QPSK/OFDM details	
+			switch(finfo.type) {
+				case FE_QPSK:
+					
+					break;
+				case FE_QAM:
+					
+					break;
+				case FE_OFDM:
+					parseOFDM(&fparams.u.ofdm, &ci->u.ofdm);
+					break;
+				case FE_ATSC:
+					
+					break;
+			}
 		}
 
 		/* Frontend SNR */
@@ -265,12 +277,203 @@ void parseCaps(fe_caps_t caps, capInfo_t cpi[])
 			
 }
 
-void parseOFDM(struct dvb_ofdm_parameters *ofdm, ofdmInfo_t *ofdmInfo
+void parseOFDM(struct dvb_ofdm_parameters *ofdm, ofdmInfo_t *ofdmInfo)
 {
 	// Bandwidth
-	if((ofdm->bandwidth & BANDWIDTH_8_MHZ))
+	switch (ofdm->bandwidth)
+	{
+		case BANDWIDTH_8_MHZ :
+			strcpy(ofdmInfo->bandwidth, "8 Mhz");
+			break;
+		case BANDWIDTH_7_MHZ :
+			strcpy(ofdmInfo->bandwidth, "7 Mhz");
+			break;
+		case BANDWIDTH_6_MHZ :
+			strcpy(ofdmInfo->bandwidth, "6 Mhz");
+			break;
+		case BANDWIDTH_AUTO :
+			strcpy(ofdmInfo->bandwidth, "Auto");
+			break;
+		case BANDWIDTH_5_MHZ :
+			strcpy(ofdmInfo->bandwidth, "5 Mhz");
+			break;
+		case BANDWIDTH_10_MHZ :
+			strcpy(ofdmInfo->bandwidth, "10 Mhz");
+			break;
+		case BANDWIDTH_1_712_MHZ : 
+			strcpy(ofdmInfo->bandwidth, "1.712 Mhz");
+			break;
+	}
+  	
+  	// CR LP
+  	parseCodeRate(ofdm->code_rate_LP, ofdmInfo->crLP); 
+  	// CR HP
+  	parseCodeRate(ofdm->code_rate_HP, ofdmInfo->crHP);
+  	// Modulation
+  	parseModulation(ofdm->constellation, ofdmInfo->modulation);
+
+  	// Tx Mode
+  	switch(ofdm->transmission_mode)
+  	{
+  		case TRANSMISSION_MODE_2K :
+  			strcpy(ofdmInfo->trMode,"2K");
+			break;
+		case TRANSMISSION_MODE_8K :
+  			strcpy(ofdmInfo->trMode,"8K");
+			break;
+		case TRANSMISSION_MODE_AUTO :
+  			strcpy(ofdmInfo->trMode,"Auto");
+			break;
+		case TRANSMISSION_MODE_4K :
+  			strcpy(ofdmInfo->trMode,"4K");
+			break;
+		case TRANSMISSION_MODE_1K :
+  			strcpy(ofdmInfo->trMode,"1K");
+			break;
+		case TRANSMISSION_MODE_16K :
+  			strcpy(ofdmInfo->trMode,"16K");
+			break;
+		case TRANSMISSION_MODE_32K :
+  			strcpy(ofdmInfo->trMode,"32K");
+			break;
+  	}
+
+  	// Guard interval
+  	switch(ofdm->guard_interval)
+  	{
+  		case GUARD_INTERVAL_1_32 :
+  			strcpy(ofdmInfo->guardInt,"1-32");
+			break;
+		case GUARD_INTERVAL_1_16 :
+  			strcpy(ofdmInfo->guardInt,"1-16");
+			break;
+		case GUARD_INTERVAL_1_8 :
+  			strcpy(ofdmInfo->guardInt,"1-8");
+			break;
+		case GUARD_INTERVAL_1_4 :
+  			strcpy(ofdmInfo->guardInt,"1-4");
+			break;
+		case GUARD_INTERVAL_AUTO :
+  			strcpy(ofdmInfo->guardInt,"Auto");
+			break;
+		case GUARD_INTERVAL_1_128 :
+  			strcpy(ofdmInfo->guardInt,"1-128");
+			break;
+		case GUARD_INTERVAL_19_128 :
+  			strcpy(ofdmInfo->guardInt,"19-128");
+			break;
+		case GUARD_INTERVAL_19_256 :
+  			strcpy(ofdmInfo->guardInt,"19-256");
+			break;
+  	}
+
+  	// Hiearchy
+  	/*switch(ofdm->hiearchy)
+  	{
+  		HIERARCHY_NONE,
+		HIERARCHY_1,
+		HIERARCHY_2,
+		HIERARCHY_4,
+		HIERARCHY_AUTO,
+  	}*/
 
 }
+
+void parseCodeRate(fe_code_rate_t coderate, char crInfo[])
+{
+	switch(coderate) 
+	{
+		case FEC_NONE :
+			strcpy(crInfo, "NONE");
+			break;
+		case FEC_1_2 :
+			strcpy(crInfo, "1/2");
+			break;
+		case FEC_2_3 :
+			strcpy(crInfo, "2/3");
+			break;
+		case FEC_3_4 :
+			strcpy(crInfo, "3/4");
+			break;
+		case FEC_4_5 :
+			strcpy(crInfo, "4/5");
+			break;
+		case FEC_5_6 :
+			strcpy(crInfo, "5/6");
+			break;
+		case FEC_6_7 :
+			strcpy(crInfo, "6/7");
+			break;
+		case FEC_7_8 :
+			strcpy(crInfo, "7/8");
+			break;
+		case FEC_8_9 :
+			strcpy(crInfo, "8/9");
+			break;
+		case FEC_AUTO :
+			strcpy(crInfo, "Auto");
+			break;
+		case FEC_3_5 :
+			strcpy(crInfo, "3/5");
+			break;
+		case FEC_9_10 :
+			strcpy(crInfo, "9/10");
+			break;
+		default:
+			strcpy(crInfo, "N/A");
+			break;
+
+		
+	}
+
+}
+
+void parseModulation(fe_modulation_t modulation, char modInfo[])
+{
+	switch(modulation)
+	{
+		case QPSK :
+			strcpy(modInfo,"QPSK");
+			break;
+		case QAM_16 :
+			strcpy(modInfo,"QAM16");
+			break;
+		case QAM_32 :
+			strcpy(modInfo,"QAM32");
+			break;
+		case QAM_64 :
+			strcpy(modInfo,"QAM64");
+			break;
+		case QAM_128 :
+			strcpy(modInfo,"QAM128");
+			break;
+		case QAM_256 :
+			strcpy(modInfo,"QAM256");
+			break;
+		case QAM_AUTO :
+			strcpy(modInfo,"Auto");
+			break;
+		case VSB_8 :
+			strcpy(modInfo,"VSB 8");
+			break;
+		case VSB_16 :
+			strcpy(modInfo,"VSB 16");
+			break;
+		case PSK_8 :
+			strcpy(modInfo,"PSK 8");
+			break;
+		case APSK_16 :
+			strcpy(modInfo,"APSK 16");
+			break;
+		case APSK_32 :
+			strcpy(modInfo,"APSK 32");
+			break;
+		case DQPSK :
+			strcpy(modInfo,"DQPSK");
+			break;
+	}
+}
+
 
 
 /*typedef enum fe_caps {

@@ -1,9 +1,17 @@
 #pragma once
 #include <stdint.h>
+#include <linux/dvb/frontend.h>
 #include "options.h"
 
+/*typedef enum frontendType {
+	FE_QPSK,
+	FE_QAM,
+	FE_OFDM,
+	FE_ATSC
+} frontendType_t;*/
+
 typedef struct ofdmInfo {
-	char bandw[6]; // Bandwidth
+	char bandwidth[6]; // Bandwidth
 	char crHP[6]; // Code rate high priority
 	char crLP[6]; // Code rate low priority
 	char modulation[10]; // OFDM,QPSK...
@@ -23,6 +31,7 @@ typedef struct capInfo {
 typedef struct cardInfo {
     char name[256]; // Name of the frontend chip
 	char *type; // DVB-(T,S,C)
+	fe_type_t typeEnum;
 	int16_t signal; // Signal strength
 	int16_t snr; // Signal to noise ratio
 	uint32_t ber; // Bit error rate

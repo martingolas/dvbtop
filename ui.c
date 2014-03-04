@@ -25,10 +25,15 @@ void showCard(WINDOW *win, int cardIdx, cardInfo *cInfo)
 	printCaps(win, cInfo->capsInfo);
 	printStatus(win, cInfo->statInfo);	
 
+	/* Modulation */
+	printOFDM(win, &cInfo->u.ofdm);
+
 	/* Info */
 	mvwprintw(win, INFO_ROFFSET, INFO_COFFSET, "Frequency: Min %d Hz Max: %d Hz Step: %d Hz",cInfo->freq_min,cInfo->freq_max,cInfo->freq_step);
 	mvwprintw(win, INFO_ROFFSET+1, INFO_COFFSET, "Symbol rate - Min: %d ppm Max: %d ppm Tolerance: %d ppm",cInfo->symbol_rate_min,cInfo->symbol_rate_max,cInfo->symbol_rate_tolerance);
 	
+
+
 	wrefresh(win);
 
 }
@@ -85,9 +90,9 @@ void printStatus(WINDOW *win, capInfo_t *st)
 {
 	int i = 0, coffset = STAT_COFFSET, roffset = STAT_ROFFSET;
 	
-	attron(A_BOLD);
+	wattron(win,A_BOLD);
 	mvwprintw(win, roffset, coffset, "Status: ");
-	attroff(A_BOLD);
+	wattroff(win,A_BOLD);
 
 	for (i = 0; i < STAT_COUNT; ++i)
 	{
@@ -102,4 +107,14 @@ void printStatus(WINDOW *win, capInfo_t *st)
 		wattroff(win,COLOR_PAIR(1));		
 		wattroff(win,COLOR_PAIR(2));		
 	}
+}
+
+void printOFDM(WINDOW *win, ofdmInfo_t *ofdm)
+{	
+	wattron(win,A_BOLD);
+	mvwprintw(win, OFDM_ROFFSET, OFDM_COFFSET, "OFDM Status: ");
+	wattroff(win,A_BOLD);
+	
+	mvwprintw(win, OFDM_ROFFSET + 1, OFDM_COFFSET, "Bandwidth:\t%s Modulation:\t%s", ofdm->bandwidth, ofdm->modulation);
+	mvwprintw(win, OFDM_ROFFSET + 2, OFDM_COFFSET, "Code rate: [HP]:\t%s\t[LP]:%s", ofdm->crHP, ofdm->crLP);
 }

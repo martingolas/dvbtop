@@ -24,4 +24,7 @@ void parseCaps(fe_caps_t caps, capInfo_t cpi[]);
 
 void parseOFDM(struct dvb_ofdm_parameters *ofdm, ofdmInfo_t *ofdmInfo);
 
+void parseCodeRate(fe_code_rate_t coderate, char crInfo[]);
+
+void parseModulation(fe_modulation_t modulation, char modInfo[]);
 // TODO Parse QPSK, VSB, QAM
