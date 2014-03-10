@@ -10,16 +10,19 @@
 #define CAPS_COUNT 27 // Define default 
 #define STAT_COUNT 7 // Count of stats to display
 
+/* User interface positions */
+#define WINDOW_HEIGHT 27
+
 #define TITLE_OFFSET 0
-#define CAPS_ROFFSET 8
+#define CAPS_ROFFSET 18
 #define CAPS_COFFSET 1
 
 #define STAT_COFFSET 1
 #define STAT_ROFFSET 6
 
-#define INFO_COFFSET 50
+#define INFO_COFFSET 1
 #define INFO_ROFFSET 8
 
-#define OFDM_COFFSET 50
-#define OFDM_ROFFSET 1
+#define OFDM_COFFSET 1
+#define OFDM_ROFFSET 12
 

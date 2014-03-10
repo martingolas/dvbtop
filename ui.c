@@ -117,6 +117,6 @@ void printOFDM(WINDOW *win, ofdmInfo_t *ofdm)
 	
 	mvwprintw(win, OFDM_ROFFSET + 1, OFDM_COFFSET, "Bandwidth:\t%s Modulation:\t%s", ofdm->bandwidth, ofdm->modulation);
 	mvwprintw(win, OFDM_ROFFSET + 2, OFDM_COFFSET, "Code rate: [HP]:\t%s\t[LP]:%s", ofdm->crHP, ofdm->crLP);
-	mvwprintw(win, OFDM_ROFFSET + 2, OFDM_COFFSET, "Trans Mode:\t %s Guard interval:\t %s", ofdm->trMode, ofdm->guardInt);
-	mvwprintw(win, OFDM_ROFFSET + 2, OFDM_COFFSET, "Hierarchy:\t %s", ofdm->hierarchy);
+	mvwprintw(win, OFDM_ROFFSET + 3, OFDM_COFFSET, "Trans Mode:\t %s Guard interval:\t %s", ofdm->trMode, ofdm->guardInt);
+	mvwprintw(win, OFDM_ROFFSET + 4, OFDM_COFFSET, "Hierarchy:\t %s", ofdm->hierarchy);
 }
