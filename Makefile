@@ -16,7 +16,10 @@ $(EXEC): $(OBJECTS)
 	$(CC) $(CFLAGS) $< -o $@
 
 
-.PHONY: clean
+.PHONY: clean install
+
+install:
+	cp $(EXEC) /usr/bin
 
 clean:
 	rm $(EXEC)
