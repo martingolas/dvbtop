@@ -4,7 +4,7 @@
 NCurses powered terminal application for monitoring status of DVB cards in Linux.
 
 ##Screenshot
-![alt text](https://github.com/martingolas/dvbtop/blob/master/screenshot.png "DVBTop screenshot")
+![dvbtop screenshot](screenshot.png "DVBTop screenshot")
 
 ##Requirements
 * Linux DVB API >= 5
