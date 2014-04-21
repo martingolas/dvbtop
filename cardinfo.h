@@ -21,6 +21,13 @@ typedef struct ofdmInfo {
 } ofdmInfo_t;
 
 
+typedef struct qpskInfo {
+	uint32_t symbol_rate;
+	char code_rate[6];
+
+} qpskInfo_t;
+
+
 
 typedef struct capInfo {
 	char has;
@@ -32,8 +39,8 @@ typedef struct cardInfo {
     char name[256]; // Name of the frontend chip
 	char *type; // DVB-(T,S,C)
 	fe_type_t typeEnum;
-	int16_t signal; // Signal strength
-	int16_t snr; // Signal to noise ratio
+	uint16_t signal; // Signal strength
+	uint16_t snr; // Signal to noise ratio
 	uint32_t ber; // Bit error rate
 	uint32_t freq; // Current tuned frequency
 	uint32_t freq_min;

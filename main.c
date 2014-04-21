@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ncurses.h>
+#include <signal.h>
 
 #include "dvb.h"
 #include "cardinfo.h"
@@ -14,6 +15,17 @@
 void printhelp()
 {
 	printf("DVBTop %3.f\n Usage: dvbtop -d [refresh] -h\n        -d Refresh rate in seconds\n",VER);
+}
+
+void handleResize(int sig)
+{
+	endwin();
+	//werase(stdscr);
+	erase();
+	int row,col;
+	getmaxyx(stdscr,row,col);
+	resize_term(row, col);
+	refresh();
 }
 
 int main(int argc, char* argv[])
@@ -51,8 +63,12 @@ int main(int argc, char* argv[])
 	}
 
 	/* Display UI, begin refresh loop */
-	//int cnt = countCards();
-	int cnt = 1;
+	int realcnt = countCards();
+	int cnt = 3, currentCardIdx = 0;
+	
+	/* Resize terminal window handler */
+	signal(SIGWINCH, handleResize);
+
 
 	/* ncurses init */
 	WINDOW *rootWin = initscr();
@@ -72,53 +88,125 @@ int main(int argc, char* argv[])
 	
 	init_pair(1, COLOR_RED, COLOR_BLACK);
 	init_pair(2, COLOR_GREEN, COLOR_BLACK);
+	init_pair(3, COLOR_WHITE, COLOR_GREEN);
 
 
 	/* Create new window for each card */
 	//WINDOW *cwins = (WINDOW*)malloc(cnt*sizeof(WINDOW));
-	WINDOW *cwins[cnt];
+	/*WINDOW *cwins[cnt];
 	for (i = 0; i < cnt; ++i)
 	{
 		cwins[i] = newwin(WINDOW_HEIGHT,COLS,(20*i)+2,0);
-	}
+	}*/
+
+	WINDOW *cardWin = newwin(WINDOW_HEIGHT,COLS,3,0);
 
 	while(1)
 	{	
 		/* Title row */	
 		showTitle();
+
 		refresh();
+
+		// Check if card idx valid
+		//if(currentCardIdx >= realcnt) currentCardIdx = realcnt - 1;
+
+		/* Card menu */
+		showCardMenu(cnt,currentCardIdx,2);
+		
 		/* Get card info and shove it to a window */
-		for(i = 0; i < cnt; ++i)
-		{	
-			cardInfo cInfo = {
-				.name = "N/A",
-				.type = "N/A",
-				.signal = -1,
-				.snr = -1,
-				.ber = -1,
-				.freq = -1
-			};
-			getCardInfo(i, &cInfo);
-			//parseCaps(cInfo.caps, cInfo.capsInfo);
-			//printw("Card: %d Name: %s Type: %s SNR: %d Signal: %d BER: %d Freq: %d Hz\n",i,cInfo.name, cInfo.type,cInfo.snr,cInfo.signal, cInfo.ber, cInfo.freq);
-			showCard(cwins[i], i, &cInfo);
-		}	
+		cardInfo cInfo = {
+			.name = "N/A",
+			.type = "N/A",
+			.signal = -1,
+			.snr = -1,
+			.ber = -1,
+			.freq = -1
+		};
+		
+		// Read frontend info
+		if(currentCardIdx < realcnt) getCardInfo(currentCardIdx, &cInfo);
+		
+		// Show card info into window
+		showCard(cardWin, currentCardIdx, &cInfo);
+		
+		// Wait for key input
+		timeout(refresh*1000);
 
 		/* Handle keyboard input */
-		char ch = ' ';
+		int ch = 0;
 		if((ch = getch()) != ERR)
 		{
-			if(ch == 'q' || ch == 'Q')
+			/*if(ch == 'q' || ch == 'Q')
 			{
 				endwin();
 				exit(0);
+			} else
+			{
+				sleep(refresh);
+			}*/
+
+			switch(ch)
+			{
+				case 'q' :
+					endwin();
+					exit(EXIT_SUCCESS);
+					break;
+
+				case 'Q' :
+					endwin();
+					exit(EXIT_SUCCESS);
+					break;
+
+				case '1' :
+					currentCardIdx = 0;
+					wclear(cardWin);
+					break;
+
+				case '2' :
+					currentCardIdx = 1;
+					wclear(cardWin);
+					break;
+
+				case '3' :
+					currentCardIdx = 2;
+					wclear(cardWin);
+					break;
+
+				case '4' :
+					currentCardIdx = 3;
+					wclear(cardWin);
+					break;
+
+				case '5' :
+					currentCardIdx = 4;
+					wclear(cardWin);
+					break;
+
+				case '6' :
+					currentCardIdx = 5;
+					wclear(cardWin);
+					break;
+
+				case '7' :
+					currentCardIdx = 6;
+					wclear(cardWin);
+					break;
+
+				case '8' :
+					currentCardIdx = 7;
+					wclear(cardWin);
+					break;
+
+				case '9' :
+					currentCardIdx = 8;
+					wclear(cardWin);
+					break;
+
+				
 			}
 		}
-
-		/* Delay before next refresh */
-		sleep(refresh);
 	}
-
 	endwin();
 	return 0;
 }

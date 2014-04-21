@@ -102,29 +102,32 @@ void getCardInfo(int cardIdx, cardInfo* ci)
 		/* Frontend SNR */
 		if(ioctl(cd, FE_READ_SNR, &ci->snr) == -1)
 		{
-			perror("Cannot get SNR: ");
+			//perror("Cannot get SNR: ");
+			ci->snr = 0;
 		}
 		
 		/* Frontend SIGNAL */
 		if(ioctl(cd, FE_READ_SIGNAL_STRENGTH, &ci->signal) == -1)
 		{
-			perror("Cannot get signal strength: ");
+			//perror("Cannot get signal strength: ");
+			ci->signal = 0;
 		}
 			
 		/* Frontend BER */
 		if(ioctl(cd, FE_READ_BER, &ci->ber) == -1)
 		{
-			perror("Cannot get bit error rate: ");
+			//perror("Cannot get bit error rate: ");
+			ci->ber = 0;
 		}
 		
 		/* Frontend STATUS */
 		fe_status_t fest;
 		if(ioctl(cd, FE_READ_STATUS, &fest) == -1)
 		{
-			perror("Cannot get frontend status: ");
-		} else {
-			parseStatus(fest, ci->statInfo);	
+			//perror("Cannot get frontend status: ");
+			fest = 0;
 		}
+		parseStatus(fest, ci->statInfo);	
 		
 		close(cd);
 	}

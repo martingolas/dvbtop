@@ -8,18 +8,18 @@ void showCard(WINDOW *win, int cardIdx, cardInfo *cInfo)
 {
 	box(win,0,0);
 	attron(A_BOLD);
-	mvwprintw(win, 0, 1, "[Card: %d]", cardIdx);
+	
 
 	mvwprintw(win, 1, 1, "%s", cInfo->name);
-	mvwprintw(win, 1, 21, "Type: %s", cInfo->type);
+	mvwprintw(win, 2, 1, "Type: %s", cInfo->type);
 	attroff(A_BOLD);
 	
 
-	mvwprintw(win, 3, 1, "Freq: %d Hz",cInfo->freq);
-	mvwprintw(win, 3, 21, "Signal: %d",cInfo->signal);
+	mvwprintw(win, 4, 1, "Freq:\t%4.2f MHz",(float)((int)cInfo->freq / 1000000));
+	mvwprintw(win, 4, 21, "Signal:\t%u",cInfo->signal);
 	
-	mvwprintw(win, 4, 1, "BER:  %d",cInfo->ber);
-	mvwprintw(win, 4, 21, "SNR:    %d",cInfo->snr);
+	mvwprintw(win, 5, 1, "BER:\t%u",cInfo->ber);
+	mvwprintw(win, 5, 21, "SNR:\t%u",cInfo->snr);
 
 
 	printCaps(win, cInfo->capsInfo);
@@ -29,8 +29,14 @@ void showCard(WINDOW *win, int cardIdx, cardInfo *cInfo)
 	printOFDM(win, &cInfo->u.ofdm);
 
 	/* Info */
-	mvwprintw(win, INFO_ROFFSET, INFO_COFFSET, "Frequency: Min %d Hz Max: %d Hz Step: %d Hz",cInfo->freq_min,cInfo->freq_max,cInfo->freq_step);
-	mvwprintw(win, INFO_ROFFSET+1, INFO_COFFSET, "Symbol rate - Min: %d ppm Max: %d ppm Tolerance: %d ppm",cInfo->symbol_rate_min,cInfo->symbol_rate_max,cInfo->symbol_rate_tolerance);
+	mvwprintw(win, INFO_ROFFSET, INFO_COFFSET, "Frequency\tMin:\t%4.2f MHz\tMax:\t%4.2f MHz\tStep:\t%4.2f MHz",
+		(float)((int)cInfo->freq_min / 1000000),
+		(float)((int)cInfo->freq_max / 1000000),
+		(float)((int)cInfo->freq_step / 1000000));
+	mvwprintw(win, INFO_ROFFSET+1, INFO_COFFSET, "Symbol rate\tMin:\t%u ppm\t\tMax:\t%u ppm\t\tTolerance:\t%u ppm",
+		cInfo->symbol_rate_min,
+		cInfo->symbol_rate_max,
+		cInfo->symbol_rate_tolerance);
 	
 
 
@@ -51,6 +57,8 @@ void showTitle()
 	char currentTime[50];
 	strftime(currentTime, sizeof(currentTime), "Last update: %H:%M:%S %d.%m.%y",ctime);
 	mvprintw(0, COLS-strlen(currentTime), currentTime);
+
+	//mvwprintw(0, 0, 1, "[Card: %d]", 25);
 	attroff(A_BOLD);
 
 	// Print help
@@ -62,9 +70,9 @@ void showTitle()
 
 void printCaps(WINDOW *win, capInfo_t *ci)
 {
-	attron(A_BOLD);
+	wattron(win,A_BOLD);
 	mvwprintw(win, CAPS_ROFFSET, 1, "Capabilites:");
-	attroff(A_BOLD);
+	wattroff(win,A_BOLD);
 
 	int i = 0, rowOffset = CAPS_ROFFSET, colOffset = 0;
 	for (i = 0; i < CAPS_COUNT; ++i)
@@ -115,8 +123,18 @@ void printOFDM(WINDOW *win, ofdmInfo_t *ofdm)
 	mvwprintw(win, OFDM_ROFFSET, OFDM_COFFSET, "OFDM Status: ");
 	wattroff(win,A_BOLD);
 	
-	mvwprintw(win, OFDM_ROFFSET + 1, OFDM_COFFSET, "Bandwidth:\t%s Modulation:\t%s", ofdm->bandwidth, ofdm->modulation);
-	mvwprintw(win, OFDM_ROFFSET + 2, OFDM_COFFSET, "Code rate: [HP]:\t%s\t[LP]:%s", ofdm->crHP, ofdm->crLP);
-	mvwprintw(win, OFDM_ROFFSET + 3, OFDM_COFFSET, "Trans Mode:\t %s Guard interval:\t %s", ofdm->trMode, ofdm->guardInt);
-	mvwprintw(win, OFDM_ROFFSET + 4, OFDM_COFFSET, "Hierarchy:\t %s", ofdm->hierarchy);
+	mvwprintw(win, OFDM_ROFFSET + 1, OFDM_COFFSET, "Bandwidth:\t%s\tModulation:\t%s", ofdm->bandwidth, ofdm->modulation);
+	mvwprintw(win, OFDM_ROFFSET + 2, OFDM_COFFSET, "Trans Mode:\t%s\tGuard interval:\t%s", ofdm->trMode, ofdm->guardInt);
+	mvwprintw(win, OFDM_ROFFSET + 3, OFDM_COFFSET, "Hierarchy:\t%s", ofdm->hierarchy);
+	mvwprintw(win, OFDM_ROFFSET + 4, OFDM_COFFSET, "Code rate:\tHigh:\t%s\tLow:\t%s", ofdm->crHP, ofdm->crLP);
+}
+
+void showCardMenu(uint16_t cardCount, uint16_t currentCard, uint16_t row)
+{
+	for (uint16_t i = 0; i < cardCount; ++i)
+	{
+		if(i == currentCard) attron(A_BOLD | COLOR_PAIR(2));
+		mvprintw(row, (i*10),"[Card: %u]", i);
+		if(i == currentCard) attroff(A_BOLD  | COLOR_PAIR(2));
+	}
 }
